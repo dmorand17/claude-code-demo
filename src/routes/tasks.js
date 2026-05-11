@@ -1,4 +1,3 @@
-// Demo route file — intentionally has a few issues for the code-reviewer agent to find.
 const store = require("../app");
 
 function handleGetTasks(req, res) {
@@ -15,15 +14,15 @@ function handleGetTask(req, res) {
   res.json(task);
 }
 
-// BUG: missing input validation — title could be empty
-// BUG: wrong status code — should be 201 for creation
 function handleCreateTask(req, res) {
   const { title, description } = req.body;
+  if (!title) {
+    return res.status(400).json({ error: "title is required" });
+  }
   const task = store.createTask(title, description);
-  res.json(task);
+  res.status(201).json(task);
 }
 
-// BUG: no error handling around store.completeTask
 function handleCompleteTask(req, res) {
   const id = parseInt(req.params.id, 10);
   const task = store.completeTask(id);
