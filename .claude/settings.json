@@ -1,0 +1,66 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Edit(src/**)",
+      "Write(src/**)",
+      "Bash(node*)",
+      "Bash(bun*)",
+      "Bash(find*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git status*)",
+      "Bash(ls*)"
+    ],
+    "deny": [
+      "Edit(.env*)",
+      "Read(.env*)",
+      "Write(.env*)",
+      "Bash(rm *)",
+      "Bash(curl * | bash*)",
+      "Bash(wget * | bash*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/PreToolUse/block-destructive.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/PreToolUse/block-secrets.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/PostToolUse/audit-logger.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/Stop/session-summary.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
