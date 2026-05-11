@@ -5,17 +5,14 @@ set -euo pipefail
 
 LOG_FILE="${PROJECT_DIR:-$(pwd)}/.claude/audit.log"
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-SESSION="${SESSION_ID:-unknown}"
 
-# Extract file_path from TOOL_INPUT if present (not all tools have it)
-FILE_PATH=$(echo "${TOOL_INPUT:-{}}" | python3 -c "
-import sys, json
-try:
-    d = json.load(sys.stdin)
-    print(d.get('file_path', d.get('command', '')))
-except Exception:
-    print('')
-" 2>/dev/null || echo "")
+# Hook data arrives as JSON on stdin
+HOOK_JSON=$(cat)
 
-echo "${TIMESTAMP} [${SESSION:0:8}] ${TOOL_NAME:-unknown} ${FILE_PATH}" >> "$LOG_FILE"
+SESSION=$(echo "$HOOK_JSON"  | jq -r '.session_id // "unknown"')
+TOOL_NAME=$(echo "$HOOK_JSON" | jq -r '.tool_name  // "unknown"')
+# Prefer file_path, fall back to command, empty string if neither present
+FILE_PATH=$(echo "$HOOK_JSON" | jq -r '.tool_input.file_path // .tool_input.command // ""')
+
+echo "${TIMESTAMP} [${SESSION:0:8}] ${TOOL_NAME} ${FILE_PATH}" >> "$LOG_FILE"
 exit 0
