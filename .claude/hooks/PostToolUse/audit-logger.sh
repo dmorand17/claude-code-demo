@@ -3,7 +3,7 @@
 # PostToolUse — exit code is logged but does not block the operation.
 set -euo pipefail
 
-LOG_FILE="${PROJECT_DIR:-$(pwd)}/.claude/audit.log"
+LOG_FILE="${CLAUDE_PROJECT_DIR:-$(pwd)}/.claude/audit.log"
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 # Hook data arrives as JSON on stdin

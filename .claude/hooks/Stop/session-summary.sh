@@ -2,7 +2,7 @@
 # Prints a session summary when Claude finishes all work.
 set -euo pipefail
 
-LOG_FILE="${PROJECT_DIR:-$(pwd)}/.claude/audit.log"
+LOG_FILE="${CLAUDE_PROJECT_DIR:-$(pwd)}/.claude/session-summary.log"
 SESSION="${SESSION_ID:-unknown}"
 SHORT_ID="${SESSION:0:8}"
 
@@ -17,7 +17,7 @@ if [ -f "$LOG_FILE" ]; then
   { grep "$SHORT_ID" "$LOG_FILE" 2>/dev/null || true; } \
     | awk '{print $3}' \
     | sort | uniq -c | sort -rn \
-    | awk '{printf "  %-6s %s\n", $1, $2}'
+    | awk '{printf "  %-6s %s\n", $1, $2}' || true
 
   FILES_CHANGED=$({ grep "$SHORT_ID" "$LOG_FILE" 2>/dev/null || true; } \
     | awk '$3 ~ /^Edit|^Write/ {print $4}' \
