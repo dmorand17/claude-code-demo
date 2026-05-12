@@ -1,4 +1,5 @@
 const store = require("../app");
+const { requireApiKey } = require("../middleware/auth");
 
 function handleGetTasks(req, res) {
   const tasks = store.listTasks();
@@ -42,6 +43,7 @@ function handleDeleteTask(req, res) {
 }
 
 module.exports = {
+  requireApiKey,
   handleGetTasks,
   handleGetTask,
   handleCreateTask,
