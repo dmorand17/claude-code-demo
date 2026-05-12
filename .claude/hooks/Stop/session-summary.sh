@@ -2,7 +2,7 @@
 # Prints a session summary when Claude finishes all work.
 set -euo pipefail
 
-LOG_FILE="${PROJECT_DIR:-$(pwd)}/.claude/audit.log"
+LOG_FILE="${CLAUDE_PROJECT_DIR:-$(pwd)}/.claude/session-summary.log"
 SESSION="${SESSION_ID:-unknown}"
 SHORT_ID="${SESSION:0:8}"
 
