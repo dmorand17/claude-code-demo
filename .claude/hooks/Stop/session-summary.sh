@@ -10,7 +10,6 @@ echo ""
 echo "=== Session Summary [${SHORT_ID}] ==="
 
 if [ -f "$LOG_FILE" ]; then
-<<<<<<< HEAD
   CALL_COUNT=$({ grep "$SHORT_ID" "$LOG_FILE" 2>/dev/null || true; } | wc -l | tr -d ' ')
   echo "Tool calls this session: ${CALL_COUNT}"
 
@@ -22,7 +21,6 @@ if [ -f "$LOG_FILE" ]; then
 
   FILES_CHANGED=$({ grep "$SHORT_ID" "$LOG_FILE" 2>/dev/null || true; } \
     | awk '$3 ~ /^Edit|^Write/ {print $4}' \
-<<<<<<< HEAD
     | { grep -v '^$' || true; } | sort -u | wc -l | tr -d ' ')
   echo "Files modified: ${FILES_CHANGED}"
 else
